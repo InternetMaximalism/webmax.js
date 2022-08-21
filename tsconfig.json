@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2019",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "rootDirs": ["./src"],
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "strictPropertyInitialization": false,
+    "types": ["jest", "@types/node"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["test/**/*", "node_modules"]
+}
