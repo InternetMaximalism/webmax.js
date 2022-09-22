@@ -1,3 +1,2 @@
-export const main = (): void => {
-  console.log("main");
-};
+export * from "./signer";
+export * from "./interface";
