@@ -18,9 +18,9 @@ export class Signer {
     };
     const url = this.generateUrl(params);
 
-    window.open(url, INTMAX_WALLET_WINDOW_NAME, "height=600px, width=400px");
-
     this.addMessageListener();
+
+    window.open(url, INTMAX_WALLET_WINDOW_NAME, "height=600px, width=400px");
   }
 
   private generateUrl(params: IntmaxWalletSignParams): string {
@@ -33,7 +33,6 @@ export class Signer {
   private addMessageListener(): void {
     window.addEventListener("message", function (event: MessageEvent) {
       if (event.origin === config.intmaxWalletUrl) {
-        console.log("event", event);
         console.log(event.data);
       }
     });
