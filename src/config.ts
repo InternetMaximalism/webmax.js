@@ -1,3 +1,3 @@
 export const config = {
-  intmaxWalletUrl: "https://intmaxwallet.vercel.app/",
+  intmaxWalletUrl: "https://intmaxwallet.vercel.app",
 };
