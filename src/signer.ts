@@ -31,7 +31,7 @@ export class Signer {
   }
 
   private addMessageListener(): void {
-    window.addEventListener("message", function (event: any) {
+    window.addEventListener("message", function (event: MessageEvent) {
       if (event.origin === config.intmaxWalletUrl) {
         console.log("event", event);
         console.log(event.data);
