@@ -8,6 +8,8 @@ import { INTMAX_WALLET_WINDOW_NAME } from "./constant";
 import { config } from "./config";
 
 export class Signer {
+  private readonly windowSize = "height=600px, width=400px";
+
   async signTransaction({ to, value, gas }: IntmaxWalletTransactionParams) {
     const params = {
       type: signType.transaction,
@@ -43,11 +45,7 @@ export class Signer {
   private openIntmaxWallet(params: IntmaxWalletSignParams): Window | null {
     const url = this.generateIntmaxWalletUrl(params);
 
-    return window.open(
-      url,
-      INTMAX_WALLET_WINDOW_NAME,
-      "height=600px, width=400px"
-    );
+    return window.open(url, INTMAX_WALLET_WINDOW_NAME, this.windowSize);
   }
 
   private closeIntmaxWallet(cWindow: Window | null): void {
