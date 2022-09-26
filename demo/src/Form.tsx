@@ -1,8 +1,11 @@
-import { Box, Button } from "@chakra-ui/react";
+import { useState } from "react";
+import { Button, Flex, VStack, Text, Box } from "@chakra-ui/react";
 import { Signer } from "./dist";
 
 export const Form = () => {
-  const handleClick = () => {
+  const [result, setResult] = useState("");
+
+  const handleTransaction = () => {
     const signer = new Signer();
     const data = {
       to: "0x....",
@@ -13,9 +16,22 @@ export const Form = () => {
     signer.signTransaction(data);
   };
 
+  const handleSignMessage = async () => {
+    const signer = new Signer();
+    const signature = await signer.signMessage("hello world");
+
+    setResult(signature);
+  };
+
   return (
-    <Box textAlign="center" fontSize="xl">
-      <Button onClick={handleClick}>Handle Transaction</Button>
-    </Box>
+    <Flex textAlign="center" fontSize="xl" direction="column">
+      <VStack spacing={6}>
+        <Button onClick={handleTransaction}>Handle Transaction</Button>
+        <Button onClick={handleSignMessage}>Handle Sign Message</Button>
+      </VStack>
+      <Box pt={6} wordBreak="break-word">
+        <Text>result: {result}</Text>
+      </Box>
+    </Flex>
   );
 };

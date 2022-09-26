@@ -11,7 +11,15 @@ export type IntmaxWalletTransactionParams = {
   gas: number;
 };
 
+export type IntmaxWalletMessageParams = {
+  message: string;
+};
+
 export type IntmaxWalletSignParams = {
   type: SignType;
-  data: IntmaxWalletTransactionParams;
+  data: IntmaxWalletTransactionParams | IntmaxWalletMessageParams;
+};
+
+export type IntmaxWalletMessageResponse = {
+  message: string;
 };

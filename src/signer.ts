@@ -2,12 +2,13 @@ import {
   signType,
   IntmaxWalletTransactionParams,
   IntmaxWalletSignParams,
+  IntmaxWalletMessageResponse,
 } from "./interface";
-import { config } from "./config";
 import { INTMAX_WALLET_WINDOW_NAME } from "./constant";
+import { config } from "./config";
 
 export class Signer {
-  signTransaction({ to, value, gas }: IntmaxWalletTransactionParams) {
+  async signTransaction({ to, value, gas }: IntmaxWalletTransactionParams) {
     const params = {
       type: signType.transaction,
       data: {
@@ -16,25 +17,65 @@ export class Signer {
         gas,
       },
     };
-    const url = this.generateUrl(params);
+    const cWindow = this.openIntmaxWallet(params);
 
-    this.addMessageListener();
+    await this.eventPromiseListener();
 
-    window.open(url, INTMAX_WALLET_WINDOW_NAME, "height=600px, width=400px");
+    this.closeIntmaxWallet(cWindow);
   }
 
-  private generateUrl(params: IntmaxWalletSignParams): string {
+  async signMessage(message: string): Promise<string> {
+    const params = {
+      type: signType.message,
+      data: {
+        message,
+      },
+    };
+    const cWindow = this.openIntmaxWallet(params);
+
+    const res = await this.eventPromiseListener<IntmaxWalletMessageResponse>();
+
+    this.closeIntmaxWallet(cWindow);
+
+    return res.message;
+  }
+
+  private openIntmaxWallet(params: IntmaxWalletSignParams): Window | null {
+    const url = this.generateIntmaxWalletUrl(params);
+
+    return window.open(
+      url,
+      INTMAX_WALLET_WINDOW_NAME,
+      "height=600px, width=400px"
+    );
+  }
+
+  private closeIntmaxWallet(cWindow: Window | null): void {
+    if (!cWindow) {
+      return;
+    }
+
+    return cWindow.close();
+  }
+
+  private generateIntmaxWalletUrl(params: IntmaxWalletSignParams): string {
     return (
       `${config.intmaxWalletUrl}/sign?transaction=` +
       encodeURIComponent(JSON.stringify(params))
     );
   }
 
-  private addMessageListener(): void {
-    window.addEventListener("message", function (event: MessageEvent) {
-      if (event.origin === config.intmaxWalletUrl) {
-        console.log(event.data);
-      }
+  private eventPromiseListener<T>(): Promise<T> {
+    return new Promise((resolve) => {
+      const listener = (event: MessageEvent) => {
+        if (event.origin === config.intmaxWalletUrl) {
+          window.removeEventListener("message", listener);
+
+          resolve(event.data as T);
+        }
+      };
+
+      window.addEventListener("message", listener, false);
     });
   }
 }
