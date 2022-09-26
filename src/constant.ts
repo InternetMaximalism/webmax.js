@@ -1,1 +1,1 @@
-export const INTMAX_WALLET_WINDOW_NAME = "intmaxwallet";
+export const INTMAX_WALLET_WINDOW_NAME = "intmaxWallet";
