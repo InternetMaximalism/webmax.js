@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Flex, VStack, Text, Box, useToast } from "@chakra-ui/react";
-import { IntmaxWalletSigner } from "./dist";
+import { IntmaxWalletSigner } from "webmax";
 
 export const Message = () => {
   const [result, setResult] = useState("");
