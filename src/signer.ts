@@ -6,8 +6,12 @@ import {
   IntmaxWalletMessageResponse,
   TransactionReceipt,
 } from "./interface";
-import { INTMAX_WALLET_WINDOW_NAME } from "./constant";
-import { config } from "./config";
+
+const INTMAX_WALLET_WINDOW_NAME = "intmaxWallet";
+
+const config = {
+  intmaxWalletUrl: "https://intmaxwallet.vercel.app",
+};
 
 export class Signer {
   private readonly windowSize = "height=600px, width=400px";
