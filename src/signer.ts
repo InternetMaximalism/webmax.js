@@ -17,7 +17,7 @@ const config = {
   intmaxWalletUrl: "https://intmaxwallet.vercel.app",
 };
 
-export class Signer {
+export class IntmaxWalletSigner {
   async sendTransaction({
     to,
     value,
