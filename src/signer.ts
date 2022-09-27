@@ -11,15 +11,14 @@ import {
 
 const INTMAX_WALLET_WINDOW_NAME = "intmaxWallet";
 const CHILD_WINDOW_WATCH_INTERVAL = 100;
+const INTMAX_WALLET_WINDOW_HEIGHT = 600;
+const INTMAX_WALLET_WINDOW_WIDTH = 400;
 
 const config = {
   intmaxWalletUrl: "https://intmaxwallet.vercel.app",
 };
 
 export class Signer {
-  // TODO: window location
-  private readonly windowSize = "height=600px, width=400px";
-
   async signTransaction({
     to,
     value,
@@ -36,7 +35,7 @@ export class Signer {
     const cWindow = this.openIntmaxWallet(params);
     const timer = this.watchWindow(
       cWindow,
-      "IntmaxWallet Tx Si transaction signature."
+      "IntmaxWallet Tx Signature: User denied transaction signature."
     );
 
     const res =
@@ -91,7 +90,16 @@ export class Signer {
 
   private openIntmaxWallet(params: IntmaxWalletSignParams): ChildWindow {
     const url = this.generateIntmaxWalletUrl(params);
-    const win = window.open(url, INTMAX_WALLET_WINDOW_NAME, this.windowSize);
+
+    const top = window.screenY;
+    const left =
+      window.screenX + window.innerWidth - INTMAX_WALLET_WINDOW_WIDTH;
+
+    const win = window.open(
+      url,
+      INTMAX_WALLET_WINDOW_NAME,
+      `top=${top}px, left=${left}px, height=${INTMAX_WALLET_WINDOW_HEIGHT}px, width=${INTMAX_WALLET_WINDOW_WIDTH}px`
+    );
 
     return {
       window: win,
