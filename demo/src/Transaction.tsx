@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { IntmaxWalletSigner } from "./dist";
+import { IntmaxWalletSigner } from "webmax";
 
 type Inputs = {
   to: string;
