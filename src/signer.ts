@@ -2,7 +2,9 @@ import {
   signType,
   IntmaxWalletTransactionParams,
   IntmaxWalletSignParams,
+  IntmaxWalletTransactionResponse,
   IntmaxWalletMessageResponse,
+  TransactionReceipt,
 } from "./interface";
 import { INTMAX_WALLET_WINDOW_NAME } from "./constant";
 import { config } from "./config";
@@ -10,7 +12,11 @@ import { config } from "./config";
 export class Signer {
   private readonly windowSize = "height=600px, width=400px";
 
-  async signTransaction({ to, value, gas }: IntmaxWalletTransactionParams) {
+  async signTransaction({
+    to,
+    value,
+    gas,
+  }: IntmaxWalletTransactionParams): Promise<TransactionReceipt> {
     const params = {
       type: signType.transaction,
       data: {
@@ -21,9 +27,12 @@ export class Signer {
     };
     const cWindow = this.openIntmaxWallet(params);
 
-    await this.eventPromiseListener();
+    const res =
+      await this.eventPromiseListener<IntmaxWalletTransactionResponse>();
 
     this.closeIntmaxWallet(cWindow);
+
+    return res.message;
   }
 
   async signMessage(message: string): Promise<string> {
