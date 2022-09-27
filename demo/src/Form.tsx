@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { Button, Flex, VStack, Text, Box } from "@chakra-ui/react";
-import { Signer } from "./dist";
+import { Signer } from "./dist/";
 
 export const Form = () => {
   const [result, setResult] = useState("");
 
-  const handleTransaction = () => {
+  const handleTransaction = async () => {
     const signer = new Signer();
     const data = {
-      to: "0x....",
+      to: "0x5Cc937c3FA78E67f8c46d9c3eFd4d98D1C546374",
       value: "0.001",
       gas: 21000,
     };
 
-    signer.signTransaction(data);
+    const receipt = await signer.signTransaction(data);
+    console.log("receipt", receipt);
   };
 
   const handleSignMessage = async () => {
