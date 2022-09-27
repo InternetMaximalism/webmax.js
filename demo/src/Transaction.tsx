@@ -36,14 +36,14 @@ export const Transaction = () => {
     gas,
   }: Inputs): Promise<void> => {
     try {
-      const signer = new IntmaxWalletSigner();
-      const data = {
+      const tx = {
         to,
         value,
         gas,
       };
 
-      const receipt = await signer.sendTransaction(data);
+      const signer = new IntmaxWalletSigner();
+      const receipt = await signer.sendTransaction(tx);
       setResult(JSON.stringify(receipt));
 
       toast({
