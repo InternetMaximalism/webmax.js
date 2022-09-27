@@ -59,3 +59,15 @@ export declare type TransactionReceipt = {
   customData?: Record<string, any>;
   ccipReadEnabled?: boolean;
 };
+
+export const windowStatus = {
+  open: "open",
+  closed: "closed",
+} as const;
+
+export type WindowStatusType = typeof windowStatus[keyof typeof windowStatus];
+
+export type ChildWindow = {
+  window: Window | null;
+  status: WindowStatusType;
+};

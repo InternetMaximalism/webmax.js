@@ -5,15 +5,19 @@ import {
   IntmaxWalletTransactionResponse,
   IntmaxWalletMessageResponse,
   TransactionReceipt,
+  ChildWindow,
+  windowStatus,
 } from "./interface";
 
 const INTMAX_WALLET_WINDOW_NAME = "intmaxWallet";
+const CHILD_WINDOW_WATCH_INTERVAL = 100;
 
 const config = {
   intmaxWalletUrl: "https://intmaxwallet.vercel.app",
 };
 
 export class Signer {
+  // TODO: window location
   private readonly windowSize = "height=600px, width=400px";
 
   async signTransaction({
@@ -30,10 +34,15 @@ export class Signer {
       },
     };
     const cWindow = this.openIntmaxWallet(params);
+    const timer = this.watchWindow(
+      cWindow,
+      "IntmaxWallet Tx Si transaction signature."
+    );
 
     const res =
       await this.eventPromiseListener<IntmaxWalletTransactionResponse>();
 
+    this.clearWatch(timer, cWindow);
     this.closeIntmaxWallet(cWindow);
 
     return res.message;
@@ -47,26 +56,55 @@ export class Signer {
       },
     };
     const cWindow = this.openIntmaxWallet(params);
+    const timer = this.watchWindow(
+      cWindow,
+      "IntmaxWallet Message Signature: User denied message signature."
+    );
 
     const res = await this.eventPromiseListener<IntmaxWalletMessageResponse>();
 
+    this.clearWatch(timer, cWindow);
     this.closeIntmaxWallet(cWindow);
 
     return res.message;
   }
 
-  private openIntmaxWallet(params: IntmaxWalletSignParams): Window | null {
-    const url = this.generateIntmaxWalletUrl(params);
+  private watchWindow(cWindow: ChildWindow, errorMsg: string): NodeJS.Timeout {
+    const timer = setInterval(checkChild, CHILD_WINDOW_WATCH_INTERVAL);
 
-    return window.open(url, INTMAX_WALLET_WINDOW_NAME, this.windowSize);
+    function checkChild(): void {
+      if (cWindow.window?.closed && cWindow.status === windowStatus.open) {
+        clearInterval(timer);
+
+        throw new Error(errorMsg);
+      }
+    }
+
+    return timer;
   }
 
-  private closeIntmaxWallet(cWindow: Window | null): void {
-    if (!cWindow) {
+  private clearWatch(timer: NodeJS.Timeout, cWindow: ChildWindow): void {
+    cWindow.status = windowStatus.closed;
+
+    clearInterval(timer);
+  }
+
+  private openIntmaxWallet(params: IntmaxWalletSignParams): ChildWindow {
+    const url = this.generateIntmaxWalletUrl(params);
+    const win = window.open(url, INTMAX_WALLET_WINDOW_NAME, this.windowSize);
+
+    return {
+      window: win,
+      status: windowStatus.open,
+    };
+  }
+
+  private closeIntmaxWallet(cWindow: ChildWindow): void {
+    if (!cWindow.window) {
       return;
     }
 
-    return cWindow.close();
+    return cWindow.window.close();
   }
 
   private generateIntmaxWalletUrl(params: IntmaxWalletSignParams): string {
@@ -80,6 +118,7 @@ export class Signer {
     return new Promise((resolve) => {
       const listener = (event: MessageEvent) => {
         if (event.origin === config.intmaxWalletUrl) {
+          // TODO: FAIL
           window.removeEventListener("message", listener);
 
           resolve(event.data as T);
