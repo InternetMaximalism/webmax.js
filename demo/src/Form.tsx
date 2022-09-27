@@ -13,7 +13,7 @@ export const Form = () => {
       gas: 21000,
     };
 
-    const receipt = await signer.signTransaction(data);
+    const receipt = await signer.sendTransaction(data);
     console.log("receipt", receipt);
   };
 

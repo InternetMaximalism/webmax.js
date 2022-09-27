@@ -19,7 +19,7 @@ const config = {
 };
 
 export class Signer {
-  async signTransaction({
+  async sendTransaction({
     to,
     value,
     gas,
