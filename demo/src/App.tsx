@@ -1,26 +1,44 @@
 import {
   ChakraProvider,
   Box,
-  Text,
-  VStack,
-  Code,
+  Tabs,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
   Grid,
   theme,
+  Flex,
+  Text,
 } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
-import { Form } from "./Form";
+import { Transaction } from "./Transaction";
+import { Message } from "./Message";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
     <Box textAlign="center" fontSize="xl">
       <Grid minH="100vh" p={3}>
         <ColorModeSwitcher justifySelf="flex-end" />
-        <VStack spacing={8}>
-          <Text>
-            Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.
+        <Flex flexDirection="column">
+          <Text as="h1" mb={6}>
+            Webmax Demo
           </Text>
-          <Form />
-        </VStack>
+          <Tabs variant="soft-rounded" colorScheme="green">
+            <TabList justifyContent="center">
+              <Tab>Sign Transaction</Tab>
+              <Tab>Sign Message</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <Transaction />
+              </TabPanel>
+              <TabPanel>
+                <Message />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Flex>
       </Grid>
     </Box>
   </ChakraProvider>
