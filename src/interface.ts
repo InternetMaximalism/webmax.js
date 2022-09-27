@@ -22,12 +22,9 @@ export type IntmaxWalletSignParams = {
   data: IntmaxWalletTransactionParams | IntmaxWalletMessageParams;
 };
 
-export type IntmaxWalletTransactionResponse = {
-  message: TransactionReceipt;
-};
-
-export type IntmaxWalletMessageResponse = {
-  message: string;
+export type IntmaxWalletEventResponse = {
+  message: TransactionReceipt | string;
+  result: boolean;
 };
 
 export type Bytes = ArrayLike<number>;
