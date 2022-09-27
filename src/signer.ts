@@ -2,8 +2,7 @@ import {
   signType,
   IntmaxWalletTransactionParams,
   IntmaxWalletSignParams,
-  IntmaxWalletTransactionResponse,
-  IntmaxWalletMessageResponse,
+  IntmaxWalletEventResponse,
   TransactionReceipt,
   ChildWindow,
   windowStatus,
@@ -19,7 +18,7 @@ const config = {
 };
 
 export class Signer {
-  async signTransaction({
+  async sendTransaction({
     to,
     value,
     gas,
@@ -38,13 +37,17 @@ export class Signer {
       "IntmaxWallet Tx Signature: User denied transaction signature."
     );
 
-    const res =
-      await this.eventPromiseListener<IntmaxWalletTransactionResponse>();
+    const receipt = await this.eventPromiseListener<TransactionReceipt>()
+      .then((value) => value)
+      .catch((error) => {
+        throw new Error(error);
+      })
+      .finally(() => {
+        this.clearWatch(timer, cWindow);
+        this.closeIntmaxWallet(cWindow);
+      });
 
-    this.clearWatch(timer, cWindow);
-    this.closeIntmaxWallet(cWindow);
-
-    return res.message;
+    return receipt;
   }
 
   async signMessage(message: string): Promise<string> {
@@ -60,12 +63,17 @@ export class Signer {
       "IntmaxWallet Message Signature: User denied message signature."
     );
 
-    const res = await this.eventPromiseListener<IntmaxWalletMessageResponse>();
+    const signature = await this.eventPromiseListener<string>()
+      .then((value) => value)
+      .catch((error) => {
+        throw new Error(error);
+      })
+      .finally(() => {
+        this.clearWatch(timer, cWindow);
+        this.closeIntmaxWallet(cWindow);
+      });
 
-    this.clearWatch(timer, cWindow);
-    this.closeIntmaxWallet(cWindow);
-
-    return res.message;
+    return signature;
   }
 
   private watchWindow(cWindow: ChildWindow, errorMsg: string): NodeJS.Timeout {
@@ -123,13 +131,17 @@ export class Signer {
   }
 
   private eventPromiseListener<T>(): Promise<T> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const listener = (event: MessageEvent) => {
         if (event.origin === config.intmaxWalletUrl) {
-          // TODO: FAIL
           window.removeEventListener("message", listener);
 
-          resolve(event.data as T);
+          const data = event.data as IntmaxWalletEventResponse;
+          if (!data.result) {
+            return reject(data.message as string);
+          }
+
+          resolve(event.data.message as T);
         }
       };
 
