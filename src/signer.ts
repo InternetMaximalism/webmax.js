@@ -17,6 +17,7 @@ const config = {
 };
 
 export class Signer {
+  // TODO: window location
   private readonly windowSize = "height=600px, width=400px";
 
   async signTransaction({
