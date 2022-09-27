@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Signer } from "./dist";
+import { IntmaxWalletSigner } from "./dist";
 
 type Inputs = {
   to: string;
@@ -36,7 +36,7 @@ export const Transaction = () => {
     gas,
   }: Inputs): Promise<void> => {
     try {
-      const signer = new Signer();
+      const signer = new IntmaxWalletSigner();
       const data = {
         to,
         value,

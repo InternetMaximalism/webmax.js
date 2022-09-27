@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Flex, VStack, Text, Box, useToast } from "@chakra-ui/react";
-import { Signer } from "./dist";
+import { IntmaxWalletSigner } from "./dist";
 
 export const Message = () => {
   const [result, setResult] = useState("");
@@ -8,7 +8,7 @@ export const Message = () => {
 
   const handleSignMessage = async () => {
     try {
-      const signer = new Signer();
+      const signer = new IntmaxWalletSigner();
       const signature = await signer.signMessage("hello world");
 
       setResult(signature);
