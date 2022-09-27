@@ -34,7 +34,7 @@
     "prebuild": "rimraf dist",
     "build": "tsc",
     "dev": "npm run compile",
-    "lint": "eslint --ext .js,.ts .",
+    "lint": "eslint --ext .js,.ts src/",
     "fix": "npm run lint --fix"
   },
   "engines": {
