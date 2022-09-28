@@ -1,6 +1,6 @@
 {
   "name": "webmax",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "webmax js library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -33,7 +33,7 @@
   "scripts": {
     "compile": "tsc -p ./tsconfig.json",
     "prebuild": "rimraf dist",
-    "build": "tsc",
+    "build": "npm run prebuild && tsc",
     "dev": "npm run compile",
     "lint": "eslint --ext .js,.ts src/",
     "fix": "npm run lint --fix"
