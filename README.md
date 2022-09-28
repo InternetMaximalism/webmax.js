@@ -10,7 +10,7 @@ webmax is intmaxwallet signer library.
 yarn add webmax
 ```
 
-#### With NPM
+#### With npm
 
 ```sh
 npm install webmax
@@ -18,9 +18,11 @@ npm install webmax
 
 ## Usage
 
+Add intmaxWalletSigner to your app first.
+
 #### Sign and send transaction to network.
 
-Add intmaxWalletSigner to your app first. Signer can sign and send transactions. You will receive a receipt.
+Signer can sign and send transactions. You will receive a receipt.
 
 ```js
 import { IntmaxWalletSigner } from "webmax";
