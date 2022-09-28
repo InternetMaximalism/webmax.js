@@ -1,8 +1,9 @@
 {
   "name": "webmax",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "webmax js library",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": "git@github.com:InternetMaximalism/webmax.js.git",
   "author": "Kazuki Kasahara <nuderebatsin.roal@gmail.com>",
   "license": "MIT",

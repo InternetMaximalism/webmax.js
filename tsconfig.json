@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "sourceMap": true,
+    "sourceMap": false,
     "strict": true,
     "target": "es2019",
     "moduleResolution": "node",
@@ -15,5 +15,5 @@
     "types": ["@types/node"]
   },
   "include": ["src/**/*"],
-  "exclude": ["test/**/*", "node_modules"]
+  "exclude": ["test/**/*", "node_modules", "dist"]
 }

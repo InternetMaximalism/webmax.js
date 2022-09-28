@@ -41,20 +41,19 @@ export type AccessListish =
   | Record<string, Array<string>>;
 
 export declare type TransactionReceipt = {
-  to?: string;
+  accessList?: AccessListish;
+  chainId?: number;
+  confirmations: number;
+  data?: BytesLike;
   from?: string;
-  nonce?: BigNumberish;
   gasLimit?: BigNumberish;
   gasPrice?: BigNumberish;
-  data?: BytesLike;
-  value?: BigNumberish;
-  chainId?: number;
-  type?: number;
-  accessList?: AccessListish;
-  maxPriorityFeePerGas?: BigNumberish;
+  hash?: string;
   maxFeePerGas?: BigNumberish;
-  customData?: Record<string, any>;
-  ccipReadEnabled?: boolean;
+  maxPriorityFeePerGas?: BigNumberish;
+  nonce?: BigNumberish;
+  to?: string;
+  type?: number;
 };
 
 export const windowStatus = {
