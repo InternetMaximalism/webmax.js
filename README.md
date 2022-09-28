@@ -52,4 +52,4 @@ const signature = await signer.signMessage("hello world");
 
 See the demo on the website:
 
-https://gilded-chaja-c962da.netlify.app/
+https://webmaxdemo.netlify.app/
