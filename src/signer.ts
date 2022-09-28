@@ -38,10 +38,7 @@ export class IntmaxWalletSigner {
       "IntmaxWallet Tx Signature: User denied transaction signature."
     );
 
-    const receipt = await this.interactIntmaxWallet<TransactionReceipt>(
-      cWindow,
-      timer
-    );
+    const receipt = await this.interactIntmaxWallet<TransactionReceipt>(cWindow, timer);
 
     return receipt;
   }
@@ -59,18 +56,12 @@ export class IntmaxWalletSigner {
       "IntmaxWallet Message Signature: User denied message signature."
     );
 
-    const signature = await this.interactIntmaxWallet<Signature>(
-      cWindow,
-      timer
-    );
+    const signature = await this.interactIntmaxWallet<Signature>(cWindow, timer);
 
     return signature;
   }
 
-  private async interactIntmaxWallet<T>(
-    cWindow: ChildWindow,
-    timer: NodeJS.Timer
-  ): Promise<T> {
+  private async interactIntmaxWallet<T>(cWindow: ChildWindow, timer: NodeJS.Timer): Promise<T> {
     const result = await this.eventPromiseListener<T>()
       .then((value) => value)
       .catch((error) => {
@@ -108,8 +99,7 @@ export class IntmaxWalletSigner {
     const url = this.generateIntmaxWalletUrl(params);
 
     const top = window.screenY;
-    const left =
-      window.screenX + window.innerWidth - INTMAX_WALLET_WINDOW_WIDTH;
+    const left = window.screenX + window.innerWidth - INTMAX_WALLET_WINDOW_WIDTH;
 
     const win = window.open(
       url,
@@ -133,8 +123,7 @@ export class IntmaxWalletSigner {
 
   private generateIntmaxWalletUrl(params: IntmaxWalletSignParams): string {
     return (
-      `${config.intmaxWalletUrl}/sign?transaction=` +
-      encodeURIComponent(JSON.stringify(params))
+      `${config.intmaxWalletUrl}/sign?transaction=` + encodeURIComponent(JSON.stringify(params))
     );
   }
 
