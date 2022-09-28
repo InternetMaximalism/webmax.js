@@ -4,6 +4,7 @@ import {
   IntmaxWalletSignParams,
   IntmaxWalletEventResponse,
   TransactionReceipt,
+  Signature,
   ChildWindow,
   windowStatus,
 } from "./interface";
@@ -37,15 +38,10 @@ export class IntmaxWalletSigner {
       "IntmaxWallet Tx Signature: User denied transaction signature."
     );
 
-    const receipt = await this.eventPromiseListener<TransactionReceipt>()
-      .then((value) => value)
-      .catch((error) => {
-        throw new Error(error);
-      })
-      .finally(() => {
-        this.clearWatch(timer, cWindow);
-        this.closeIntmaxWallet(cWindow);
-      });
+    const receipt = await this.interactIntmaxWallet<TransactionReceipt>(
+      cWindow,
+      timer
+    );
 
     return receipt;
   }
@@ -63,7 +59,19 @@ export class IntmaxWalletSigner {
       "IntmaxWallet Message Signature: User denied message signature."
     );
 
-    const signature = await this.eventPromiseListener<string>()
+    const signature = await this.interactIntmaxWallet<Signature>(
+      cWindow,
+      timer
+    );
+
+    return signature;
+  }
+
+  private async interactIntmaxWallet<T>(
+    cWindow: ChildWindow,
+    timer: NodeJS.Timer
+  ): Promise<T> {
+    const result = await this.eventPromiseListener<T>()
       .then((value) => value)
       .catch((error) => {
         throw new Error(error);
@@ -73,7 +81,7 @@ export class IntmaxWalletSigner {
         this.closeIntmaxWallet(cWindow);
       });
 
-    return signature;
+    return result;
   }
 
   private watchWindow(cWindow: ChildWindow, errorMsg: string): NodeJS.Timeout {
