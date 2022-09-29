@@ -30,11 +30,7 @@ export const Transaction = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async ({
-    to,
-    value,
-    gas,
-  }: Inputs): Promise<void> => {
+  const onSubmit: SubmitHandler<Inputs> = async ({ to, value, gas }: Inputs): Promise<void> => {
     try {
       const tx = {
         to,
@@ -64,8 +60,7 @@ export const Transaction = () => {
     }
   };
 
-  const handleClick = (key: "to" | "value" | "gas"): void =>
-    void resetField(key);
+  const handleClick = (key: "to" | "value" | "gas"): void => void resetField(key);
 
   return (
     <Flex textAlign="center" fontSize="xl" direction="column">
@@ -73,12 +68,7 @@ export const Transaction = () => {
         <VStack spacing={3} my={2}>
           <Flex w="100%" alignItems="center" flexDirection="column">
             <Flex w="100%" alignItems="center">
-              <Text
-                fontWeight="bold"
-                fontSize={{ base: "xs" }}
-                w="150px"
-                mr={{ base: 2, md: 8 }}
-              >
+              <Text fontWeight="bold" fontSize={{ base: "xs" }} w="150px" mr={{ base: 2, md: 8 }}>
                 To Address
               </Text>
               <InputGroup>
@@ -103,12 +93,7 @@ export const Transaction = () => {
           </Flex>
           <Flex w="100%" alignItems="center" flexDirection="column">
             <Flex w="100%" alignItems="center">
-              <Text
-                fontWeight="bold"
-                fontSize={{ base: "xs" }}
-                w="150px"
-                mr={{ base: 2, md: 8 }}
-              >
+              <Text fontWeight="bold" fontSize={{ base: "xs" }} w="150px" mr={{ base: 2, md: 8 }}>
                 Transaction Value
               </Text>
               <InputGroup>
@@ -133,12 +118,7 @@ export const Transaction = () => {
           </Flex>
           <Flex w="100%" alignItems="center" flexDirection="column">
             <Flex w="100%" alignItems="center">
-              <Text
-                fontWeight="bold"
-                fontSize={{ base: "xs" }}
-                w="150px"
-                mr={{ base: 2, md: 8 }}
-              >
+              <Text fontWeight="bold" fontSize={{ base: "xs" }} w="150px" mr={{ base: 2, md: 8 }}>
                 gas
               </Text>
               <InputGroup>

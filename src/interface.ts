@@ -1,11 +1,12 @@
 import { BigNumber } from "bignumber.js";
 
-export const signType = {
+export const signerType = {
+  connect: "connect",
   transaction: "transaction",
   message: "message",
 } as const;
 
-export type SignType = typeof signType[keyof typeof signType];
+export type SignerType = typeof signerType[keyof typeof signerType];
 
 export type IntmaxWalletTransactionParams = {
   to: string;
@@ -20,8 +21,8 @@ export type IntmaxWalletMessageParams = {
 };
 
 export type IntmaxWalletSignParams = {
-  type: SignType;
-  data: IntmaxWalletTransactionParams | IntmaxWalletMessageParams;
+  type: SignerType;
+  data?: IntmaxWalletTransactionParams | IntmaxWalletMessageParams;
 };
 
 export type IntmaxWalletEventResponse = {
@@ -68,4 +69,9 @@ export type WindowStatusType = typeof windowStatus[keyof typeof windowStatus];
 export type ChildWindow = {
   window: Window | null;
   status: WindowStatusType;
+};
+
+export type IntmaxWalletAccount = {
+  address: string;
+  chainId: number;
 };
