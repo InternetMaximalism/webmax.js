@@ -12,9 +12,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
+import { Connect } from "./Connect";
 import { Transaction } from "./Transaction";
 import { Message } from "./Message";
-import { Connect } from "./Connect";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
@@ -25,7 +25,7 @@ export const App = () => (
           <Text as="h1" mb={6}>
             Webmax Demo
           </Text>
-          <Tabs variant="soft-rounded" colorScheme="green">
+          <Tabs variant="soft-rounded">
             <TabList justifyContent="center">
               <Tab>Connect to Account</Tab>
               <Tab>Sign Transaction</Tab>

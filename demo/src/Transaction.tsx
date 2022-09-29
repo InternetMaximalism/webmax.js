@@ -143,7 +143,7 @@ export const Transaction = () => {
             )}
           </Flex>
         </VStack>
-        <Button type="submit">Submit Sign Transaction</Button>
+        <Button type="submit">Sign Transaction</Button>
         <Box wordBreak="break-word">
           <Text>result: {result}</Text>
         </Box>
