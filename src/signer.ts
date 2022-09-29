@@ -109,12 +109,12 @@ export class IntmaxWalletSigner {
       },
     };
 
-    const account = await this.interactIntmaxWallet<IntmaxWalletAccount>(
+    this._account = await this.interactIntmaxWallet<IntmaxWalletAccount>(
       params,
       "IntmaxWallet SwitchChain: User Rejected."
     );
 
-    return account ?? this._account;
+    return this._account;
   }
 
   private async interactIntmaxWallet<T>(
