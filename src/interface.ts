@@ -3,8 +3,9 @@ import { BigNumber } from "bignumber.js";
 export const signerType = {
   connect: "connect",
   switchChain: "switchChain",
-  transaction: "transaction",
-  message: "message",
+  signTransaction: "signTransaction",
+  sendTransaction: "sendTransaction",
+  signMessage: "signMessage",
 } as const;
 
 export type SignerType = typeof signerType[keyof typeof signerType];
@@ -12,12 +13,6 @@ export type SignerType = typeof signerType[keyof typeof signerType];
 export type IntmaxWalletAccount = {
   address: string;
   chainId: number;
-};
-
-export type IntmaxWalletTransactionParams = {
-  to: string;
-  value: string;
-  gas: number;
 };
 
 export type Signature = string;
@@ -32,12 +27,24 @@ export type IntmaxWalletMessageParams = {
 
 export type IntmaxWalletInteractParams = {
   type: SignerType;
-  data?: IntmaxWalletTransactionParams | IntmaxWalletMessageParams | SwitchChainParams;
+  data?: TransactionRequest | IntmaxWalletMessageParams | SwitchChainParams;
 };
 
 export type IntmaxWalletEventResponse = {
   message: TransactionReceipt | string;
   result: boolean;
+};
+
+export const windowStatus = {
+  open: "open",
+  closed: "closed",
+} as const;
+
+export type WindowStatusType = typeof windowStatus[keyof typeof windowStatus];
+
+export type ChildWindow = {
+  window: Window | null;
+  status: WindowStatusType;
 };
 
 export type Bytes = ArrayLike<number>;
@@ -69,14 +76,19 @@ export declare type TransactionReceipt = {
   type?: number;
 };
 
-export const windowStatus = {
-  open: "open",
-  closed: "closed",
-} as const;
-
-export type WindowStatusType = typeof windowStatus[keyof typeof windowStatus];
-
-export type ChildWindow = {
-  window: Window | null;
-  status: WindowStatusType;
+export type TransactionRequest = {
+  to?: string;
+  from?: string;
+  nonce?: BigNumberish;
+  gasLimit?: BigNumberish;
+  gasPrice?: BigNumberish;
+  data?: BytesLike;
+  value?: BigNumberish;
+  chainId?: number;
+  type?: number;
+  accessList?: AccessListish;
+  maxPriorityFeePerGas?: BigNumberish;
+  maxFeePerGas?: BigNumberish;
+  customData?: Record<string, any>;
+  ccipReadEnabled?: boolean;
 };
