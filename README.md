@@ -31,6 +31,23 @@ const signer = new IntmaxWalletSigner();
 const account = await signer.connectToAccount();
 ```
 
+#### Sign transaction.
+
+Signer can sign transactions. You will receive a serialized signature.
+
+```js
+import { IntmaxWalletSigner } from "webmax";
+
+const tx = {
+  to,
+  value,
+  gasLimit,
+};
+
+const signer = new IntmaxWalletSigner();
+const serializedSignature = await signer.signTransaction(tx);
+```
+
 #### Sign and send transaction to network.
 
 Signer can sign and send transactions. You will receive a receipt.
@@ -41,7 +58,7 @@ import { IntmaxWalletSigner } from "webmax";
 const tx = {
   to,
   value,
-  gas,
+  gasLimit,
 };
 
 const signer = new IntmaxWalletSigner();
