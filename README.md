@@ -20,6 +20,17 @@ npm install webmax
 
 Add intmaxWalletSigner to your app first.
 
+#### Get account from intmaxWallet.
+
+Signer can get account from intmaxWallet.
+
+```js
+import { IntmaxWalletSigner } from "webmax";
+
+const signer = new IntmaxWalletSigner();
+const account = await signer.connectToAccount();
+```
+
 #### Sign and send transaction to network.
 
 Signer can sign and send transactions. You will receive a receipt.

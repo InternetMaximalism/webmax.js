@@ -14,6 +14,7 @@ import {
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { Transaction } from "./Transaction";
 import { Message } from "./Message";
+import { Connect } from "./Connect";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
@@ -26,10 +27,14 @@ export const App = () => (
           </Text>
           <Tabs variant="soft-rounded" colorScheme="green">
             <TabList justifyContent="center">
+              <Tab>Connect to Account</Tab>
               <Tab>Sign Transaction</Tab>
               <Tab>Sign Message</Tab>
             </TabList>
             <TabPanels>
+              <TabPanel>
+                <Connect />
+              </TabPanel>
               <TabPanel>
                 <Transaction />
               </TabPanel>

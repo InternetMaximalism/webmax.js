@@ -1,5 +1,5 @@
 import {
-  signType,
+  signerType,
   IntmaxWalletTransactionParams,
   IntmaxWalletSignParams,
   IntmaxWalletEventResponse,
@@ -7,6 +7,7 @@ import {
   Signature,
   ChildWindow,
   windowStatus,
+  IntmaxWalletAccount,
 } from "./interface";
 
 const INTMAX_WALLET_WINDOW_NAME = "intmaxWallet";
@@ -19,20 +20,58 @@ const config = {
 };
 
 export class IntmaxWalletSigner {
+  private _account: IntmaxWalletAccount | null;
+
+  async connectToAccount(): Promise<IntmaxWalletAccount> {
+    if (this._account) {
+      return this._account;
+    }
+
+    const params = {
+      type: signerType.connect,
+    };
+    const url = this.generateIntmaxWalletSignUrl(params);
+
+    const cWindow = this.openIntmaxWallet(url);
+    const timer = this.watchWindow(cWindow, "IntmaxWallet Connect: User Rejected.");
+
+    this._account = await this.interactIntmaxWallet<IntmaxWalletAccount>(cWindow, timer);
+
+    return this._account;
+  }
+
+  isConnected(): boolean {
+    return !!this._account;
+  }
+
+  async getAddress(): Promise<string> {
+    const account = await this.connectToAccount();
+
+    return account.address;
+  }
+
+  async getChainId(): Promise<number> {
+    const account = await this.connectToAccount();
+
+    return account.chainId;
+  }
+
   async sendTransaction({
     to,
     value,
     gas,
   }: IntmaxWalletTransactionParams): Promise<TransactionReceipt> {
     const params = {
-      type: signType.transaction,
+      type: signerType.transaction,
       data: {
         to,
         value,
         gas,
       },
     };
-    const cWindow = this.openIntmaxWallet(params);
+    const url = this.generateIntmaxWalletSignUrl(params);
+
+    const cWindow = this.openIntmaxWallet(url);
     const timer = this.watchWindow(
       cWindow,
       "IntmaxWallet Tx Signature: User denied transaction signature."
@@ -45,12 +84,14 @@ export class IntmaxWalletSigner {
 
   async signMessage(message: string): Promise<string> {
     const params = {
-      type: signType.message,
+      type: signerType.message,
       data: {
         message,
       },
     };
-    const cWindow = this.openIntmaxWallet(params);
+    const url = this.generateIntmaxWalletSignUrl(params);
+
+    const cWindow = this.openIntmaxWallet(url);
     const timer = this.watchWindow(
       cWindow,
       "IntmaxWallet Message Signature: User denied message signature."
@@ -95,9 +136,7 @@ export class IntmaxWalletSigner {
     clearInterval(timer);
   }
 
-  private openIntmaxWallet(params: IntmaxWalletSignParams): ChildWindow {
-    const url = this.generateIntmaxWalletUrl(params);
-
+  private openIntmaxWallet(url: string): ChildWindow {
     const top = window.screenY;
     const left = window.screenX + window.innerWidth - INTMAX_WALLET_WINDOW_WIDTH;
 
@@ -121,10 +160,8 @@ export class IntmaxWalletSigner {
     return cWindow.window.close();
   }
 
-  private generateIntmaxWalletUrl(params: IntmaxWalletSignParams): string {
-    return (
-      `${config.intmaxWalletUrl}/sign?transaction=` + encodeURIComponent(JSON.stringify(params))
-    );
+  private generateIntmaxWalletSignUrl(params: IntmaxWalletSignParams): string {
+    return `${config.intmaxWalletUrl}/signer?params=` + encodeURIComponent(JSON.stringify(params));
   }
 
   private eventPromiseListener<T>(): Promise<T> {
