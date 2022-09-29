@@ -17,10 +17,10 @@ import { IntmaxWalletSigner } from "webmax";
 type Inputs = {
   to: string;
   value: string;
-  gas: number;
+  gasLimit: number;
 };
 
-export const Transaction = () => {
+export const SignTransaction = () => {
   const [result, setResult] = useState("");
   const toast = useToast();
   const {
@@ -30,17 +30,21 @@ export const Transaction = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async ({ to, value, gas }: Inputs): Promise<void> => {
+  const onSubmit: SubmitHandler<Inputs> = async ({
+    to,
+    value,
+    gasLimit,
+  }: Inputs): Promise<void> => {
     try {
       const tx = {
         to,
-        value,
-        gas,
+        value: value,
+        gasLimit,
       };
 
       const signer = new IntmaxWalletSigner();
-      const receipt = await signer.sendTransaction(tx);
-      setResult(JSON.stringify(receipt));
+      const signature = await signer.signTransaction(tx);
+      setResult(signature);
 
       toast({
         title: "Success Sign Transaction",
@@ -60,7 +64,7 @@ export const Transaction = () => {
     }
   };
 
-  const handleClick = (key: "to" | "value" | "gas"): void => void resetField(key);
+  const handleClick = (key: "to" | "value" | "gasLimit"): void => void resetField(key);
 
   return (
     <Flex textAlign="center" fontSize="xl" direction="column">
@@ -125,20 +129,20 @@ export const Transaction = () => {
                 <Input
                   type="text"
                   placeholder="21000"
-                  {...register("gas", {
-                    required: "gas is required",
+                  {...register("gasLimit", {
+                    required: "gasLimit is required",
                     valueAsNumber: true,
                   })}
                 />
                 <InputRightElement
                   children={<SmallCloseIcon color="gray" cursor="pointer" />}
-                  onClick={() => handleClick("gas")}
+                  onClick={() => handleClick("gasLimit")}
                 />
               </InputGroup>
             </Flex>
-            {errors.gas && (
+            {errors.gasLimit && (
               <Text color="red.500" fontWeight="medium" mt={2}>
-                {errors.gas.message}
+                {errors.gasLimit.message}
               </Text>
             )}
           </Flex>

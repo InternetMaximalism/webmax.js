@@ -13,8 +13,9 @@ import {
 } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { Connect } from "./Connect";
-import { Transaction } from "./Transaction";
-import { Message } from "./Message";
+import { SendTransaction } from "./SendTransaction";
+import { SignTransaction } from "./SignTransaction";
+import { SignMessage } from "./SignMessage";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
@@ -29,6 +30,7 @@ export const App = () => (
             <TabList justifyContent="center">
               <Tab>Connect to Account</Tab>
               <Tab>Sign Transaction</Tab>
+              <Tab>Send Transaction</Tab>
               <Tab>Sign Message</Tab>
             </TabList>
             <TabPanels>
@@ -36,10 +38,13 @@ export const App = () => (
                 <Connect />
               </TabPanel>
               <TabPanel>
-                <Transaction />
+                <SignTransaction />
               </TabPanel>
               <TabPanel>
-                <Message />
+                <SendTransaction />
+              </TabPanel>
+              <TabPanel>
+                <SignMessage />
               </TabPanel>
             </TabPanels>
           </Tabs>

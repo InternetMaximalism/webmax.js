@@ -1,10 +1,10 @@
 import {
   signerType,
-  IntmaxWalletTransactionParams,
   IntmaxWalletInteractParams,
   IntmaxWalletEventResponse,
   IntmaxWalletAccount,
   TransactionReceipt,
+  TransactionRequest,
   Signature,
   ChildWindow,
   windowStatus,
@@ -54,23 +54,29 @@ export class IntmaxWalletSigner {
     return account.chainId;
   }
 
-  async sendTransaction({
-    to,
-    value,
-    gas,
-  }: IntmaxWalletTransactionParams): Promise<TransactionReceipt> {
+  async signTransaction(transaction: TransactionRequest): Promise<string> {
     const params = {
-      type: signerType.transaction,
-      data: {
-        to,
-        value,
-        gas,
-      },
+      type: signerType.signTransaction,
+      data: transaction,
+    };
+
+    const serializedSignature = await this.interactIntmaxWallet<string>(
+      params,
+      "IntmaxWallet Tx Signature: User denied transaction signature."
+    );
+
+    return serializedSignature;
+  }
+
+  async sendTransaction(transaction: TransactionRequest): Promise<TransactionReceipt> {
+    const params = {
+      type: signerType.sendTransaction,
+      data: transaction,
     };
 
     const receipt = await this.interactIntmaxWallet<TransactionReceipt>(
       params,
-      "IntmaxWallet Tx Signature: User denied transaction signature."
+      "IntmaxWallet Tx Send: User denied send transaction."
     );
 
     return receipt;
@@ -78,7 +84,7 @@ export class IntmaxWalletSigner {
 
   async signMessage(message: string): Promise<string> {
     const params = {
-      type: signerType.message,
+      type: signerType.signMessage,
       data: {
         message,
       },
