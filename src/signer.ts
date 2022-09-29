@@ -1,13 +1,13 @@
 import {
   signerType,
   IntmaxWalletTransactionParams,
-  IntmaxWalletSignParams,
+  IntmaxWalletInteractParams,
   IntmaxWalletEventResponse,
+  IntmaxWalletAccount,
   TransactionReceipt,
   Signature,
   ChildWindow,
   windowStatus,
-  IntmaxWalletAccount,
 } from "./interface";
 
 const INTMAX_WALLET_WINDOW_NAME = "intmaxWallet";
@@ -26,7 +26,6 @@ export class IntmaxWalletSigner {
     if (this._account) {
       return this._account;
     }
-
     const params = {
       type: signerType.connect,
     };
@@ -93,8 +92,27 @@ export class IntmaxWalletSigner {
     return signature;
   }
 
+  async switchChain(chainId: number): Promise<IntmaxWalletAccount> {
+    if (!this.isConnected()) {
+      await this.connectToAccount();
+    }
+    const params = {
+      type: signerType.switchChain,
+      data: {
+        chainId,
+      },
+    };
+
+    const account = await this.interactIntmaxWallet<IntmaxWalletAccount>(
+      params,
+      "IntmaxWallet SwitchChain: User Rejected."
+    );
+
+    return account ?? this._account;
+  }
+
   private async interactIntmaxWallet<T>(
-    params: IntmaxWalletSignParams,
+    params: IntmaxWalletInteractParams,
     errorMsg: string
   ): Promise<T> {
     const url = this.generateIntmaxWalletSignUrl(params);
@@ -159,7 +177,7 @@ export class IntmaxWalletSigner {
     return cWindow.window.close();
   }
 
-  private generateIntmaxWalletSignUrl(params: IntmaxWalletSignParams): string {
+  private generateIntmaxWalletSignUrl(params: IntmaxWalletInteractParams): string {
     return `${config.intmaxWalletUrl}/signer?params=` + encodeURIComponent(JSON.stringify(params));
   }
 
