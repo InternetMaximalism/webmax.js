@@ -30,12 +30,11 @@ export class IntmaxWalletSigner {
     const params = {
       type: signerType.connect,
     };
-    const url = this.generateIntmaxWalletSignUrl(params);
 
-    const cWindow = this.openIntmaxWallet(url);
-    const timer = this.watchWindow(cWindow, "IntmaxWallet Connect: User Rejected.");
-
-    this._account = await this.interactIntmaxWallet<IntmaxWalletAccount>(cWindow, timer);
+    this._account = await this.interactIntmaxWallet<IntmaxWalletAccount>(
+      params,
+      "IntmaxWallet Connect: User Rejected."
+    );
 
     return this._account;
   }
@@ -69,15 +68,11 @@ export class IntmaxWalletSigner {
         gas,
       },
     };
-    const url = this.generateIntmaxWalletSignUrl(params);
 
-    const cWindow = this.openIntmaxWallet(url);
-    const timer = this.watchWindow(
-      cWindow,
+    const receipt = await this.interactIntmaxWallet<TransactionReceipt>(
+      params,
       "IntmaxWallet Tx Signature: User denied transaction signature."
     );
-
-    const receipt = await this.interactIntmaxWallet<TransactionReceipt>(cWindow, timer);
 
     return receipt;
   }
@@ -89,20 +84,24 @@ export class IntmaxWalletSigner {
         message,
       },
     };
-    const url = this.generateIntmaxWalletSignUrl(params);
 
-    const cWindow = this.openIntmaxWallet(url);
-    const timer = this.watchWindow(
-      cWindow,
+    const signature = await this.interactIntmaxWallet<Signature>(
+      params,
       "IntmaxWallet Message Signature: User denied message signature."
     );
-
-    const signature = await this.interactIntmaxWallet<Signature>(cWindow, timer);
 
     return signature;
   }
 
-  private async interactIntmaxWallet<T>(cWindow: ChildWindow, timer: NodeJS.Timer): Promise<T> {
+  private async interactIntmaxWallet<T>(
+    params: IntmaxWalletSignParams,
+    errorMsg: string
+  ): Promise<T> {
+    const url = this.generateIntmaxWalletSignUrl(params);
+
+    const cWindow = this.openIntmaxWallet(url);
+    const timer = this.watchWindow(cWindow, errorMsg);
+
     const result = await this.eventPromiseListener<T>()
       .then((value) => value)
       .catch((error) => {
