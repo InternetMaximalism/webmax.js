@@ -16,7 +16,7 @@ const INTMAX_WALLET_WINDOW_HEIGHT = 600;
 const INTMAX_WALLET_WINDOW_WIDTH = 400;
 
 const config = {
-  intmaxWalletUrl: "https://intmaxwallet.vercel.app",
+  intmaxWalletUrl: "https://www.intmaxwallet.io",
 };
 
 export class IntmaxWalletSigner {

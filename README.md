@@ -31,6 +31,19 @@ const signer = new IntmaxWalletSigner();
 const account = await signer.connectToAccount();
 ```
 
+#### Request switch network
+
+Signer can switch network on intmaxWallet.
+
+```js
+import { IntmaxWalletSigner } from "webmax";
+
+const chainId = 1;
+
+const signer = new IntmaxWalletSigner();
+const account = await signer.switchChain(chainId);
+```
+
 #### Sign transaction.
 
 Signer can sign transactions. You will receive a serialized signature.
