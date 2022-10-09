@@ -11,12 +11,21 @@ import {
   Flex,
   Text,
   VStack,
+  HStack,
+  Link as ChakraLink,
 } from "@chakra-ui/react";
+import { FaGithub } from "react-icons/fa";
+import { AiOutlineGlobal } from "react-icons/ai";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { Connect } from "./Connect";
 import { SendTransaction } from "./SendTransaction";
 import { SignTransaction } from "./SignTransaction";
 import { SignMessage } from "./SignMessage";
+
+const links = {
+  github: "https://github.com/InternetMaximalism/webmax.js",
+  intmaxWallet: "https://www.intmaxwallet.io/",
+};
 
 export const App = () => (
   <ChakraProvider theme={theme}>
@@ -25,18 +34,20 @@ export const App = () => (
         <ColorModeSwitcher justifySelf="flex-end" />
         <Flex flexDirection="column">
           <VStack pb={8} spacing={6}>
-            <Text as="h1" pb={6}>
-              <Text
-                as="span"
-                display="inline-block"
-                fontFamily="Lexend"
-                fontWeight="extrabold"
-                pr={2}
-              >
+            <Text as="h1">
+              <Text as="span" display="inline-block" fontFamily="Lexend" fontWeight="extrabold">
                 Webmax.js
               </Text>
               Demo
             </Text>
+            <HStack spacing={10}>
+              <ChakraLink isExternal href={links.github}>
+                <FaGithub />
+              </ChakraLink>
+              <ChakraLink isExternal href={links.intmaxWallet}>
+                <AiOutlineGlobal />
+              </ChakraLink>
+            </HStack>
             <Text as="h2">make your dapps walletless by webmax.js</Text>
           </VStack>
           <Tabs variant="soft-rounded">
