@@ -51,7 +51,7 @@ export const App = () => (
             <Text as="h2">make your dapps walletless by webmax.js</Text>
           </VStack>
           <Tabs variant="soft-rounded">
-            <TabList justifyContent="center">
+            <TabList justifyContent="center" flexWrap="wrap">
               <Tab>Connect to Account</Tab>
               <Tab>Sign Transaction</Tab>
               <Tab>Send Transaction</Tab>
