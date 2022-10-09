@@ -10,6 +10,7 @@ import {
   theme,
   Flex,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { Connect } from "./Connect";
@@ -23,9 +24,21 @@ export const App = () => (
       <Grid minH="100vh" p={3}>
         <ColorModeSwitcher justifySelf="flex-end" />
         <Flex flexDirection="column">
-          <Text as="h1" mb={6}>
-            Webmax Demo
-          </Text>
+          <VStack pb={8} spacing={6}>
+            <Text as="h1" pb={6}>
+              <Text
+                as="span"
+                display="inline-block"
+                fontFamily="Lexend"
+                fontWeight="extrabold"
+                pr={2}
+              >
+                Webmax.js
+              </Text>
+              Demo
+            </Text>
+            <Text as="h2">make your dapps walletless by webmax.js</Text>
+          </VStack>
           <Tabs variant="soft-rounded">
             <TabList justifyContent="center">
               <Tab>Connect to Account</Tab>
