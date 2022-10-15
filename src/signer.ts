@@ -19,6 +19,8 @@ const config = {
   intmaxWalletUrl: "https://www.intmaxwallet.io",
 };
 
+type Reject = (msg: string) => void;
+
 export class IntmaxWalletSigner {
   private _account: IntmaxWalletAccount | null;
 
@@ -125,12 +127,12 @@ export class IntmaxWalletSigner {
       .then((value) => value)
       .catch((error) => {
         throw new Error(error);
-      })
+      });
 
     return result;
   }
 
-  private watchWindow(cWindow: ChildWindow, errorMsg: string, reject: Function): NodeJS.Timeout {
+  private watchWindow(cWindow: ChildWindow, errorMsg: string, reject: Reject): NodeJS.Timeout {
     const timer = setInterval(checkChild, CHILD_WINDOW_WATCH_INTERVAL);
 
     function checkChild(): void {
@@ -183,17 +185,17 @@ export class IntmaxWalletSigner {
   ): Promise<T> {
     return new Promise((resolve, reject) => {
       const url = this.generateIntmaxWalletSignUrl(params);
-	
+
       const cWindow = this.openIntmaxWallet(url);
       const timer = this.watchWindow(cWindow, errorMsg, reject);
-	
+
       const listener = (event: MessageEvent) => {
         if (event.origin === config.intmaxWalletUrl) {
           window.removeEventListener("message", listener);
-	    
-	  this.clearWatch(timer, cWindow);
-	  this.closeIntmaxWallet(cWindow);
-	    
+
+          this.clearWatch(timer, cWindow);
+          this.closeIntmaxWallet(cWindow);
+
           const data = event.data as IntmaxWalletEventResponse;
           if (!data.result) {
             return reject(data.message as string);
