@@ -19,6 +19,8 @@ const config = {
   intmaxWalletUrl: "https://www.intmaxwallet.io",
 };
 
+type Reject = (msg: string) => void;
+
 export class IntmaxWalletSigner {
   private _account: IntmaxWalletAccount | null;
 
@@ -130,7 +132,7 @@ export class IntmaxWalletSigner {
     return result;
   }
 
-  private watchWindow(cWindow: ChildWindow, errorMsg: string, reject: Function): NodeJS.Timeout {
+  private watchWindow(cWindow: ChildWindow, errorMsg: string, reject: Reject): NodeJS.Timeout {
     const timer = setInterval(checkChild, CHILD_WINDOW_WATCH_INTERVAL);
 
     function checkChild(): void {
