@@ -125,7 +125,7 @@ export class IntmaxWalletSigner {
       .then((value) => value)
       .catch((error) => {
         throw new Error(error);
-      })
+      });
 
     return result;
   }
@@ -183,17 +183,17 @@ export class IntmaxWalletSigner {
   ): Promise<T> {
     return new Promise((resolve, reject) => {
       const url = this.generateIntmaxWalletSignUrl(params);
-	
+
       const cWindow = this.openIntmaxWallet(url);
       const timer = this.watchWindow(cWindow, errorMsg, reject);
-	
+
       const listener = (event: MessageEvent) => {
         if (event.origin === config.intmaxWalletUrl) {
           window.removeEventListener("message", listener);
-	    
-	  this.clearWatch(timer, cWindow);
-	  this.closeIntmaxWallet(cWindow);
-	    
+
+          this.clearWatch(timer, cWindow);
+          this.closeIntmaxWallet(cWindow);
+
           const data = event.data as IntmaxWalletEventResponse;
           if (!data.result) {
             return reject(data.message as string);
