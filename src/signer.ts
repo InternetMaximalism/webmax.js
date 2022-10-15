@@ -121,32 +121,22 @@ export class IntmaxWalletSigner {
     params: IntmaxWalletInteractParams,
     errorMsg: string
   ): Promise<T> {
-    const url = this.generateIntmaxWalletSignUrl(params);
-
-    const cWindow = this.openIntmaxWallet(url);
-    const timer = this.watchWindow(cWindow, errorMsg);
-
-    const result = await this.eventPromiseListener<T>()
+    const result = await this.eventPromiseListener<T>(params, errorMsg)
       .then((value) => value)
       .catch((error) => {
         throw new Error(error);
       })
-      .finally(() => {
-        this.clearWatch(timer, cWindow);
-        this.closeIntmaxWallet(cWindow);
-      });
 
     return result;
   }
 
-  private watchWindow(cWindow: ChildWindow, errorMsg: string): NodeJS.Timeout {
+  private watchWindow(cWindow: ChildWindow, errorMsg: string, reject: Function): NodeJS.Timeout {
     const timer = setInterval(checkChild, CHILD_WINDOW_WATCH_INTERVAL);
 
     function checkChild(): void {
       if (cWindow.window?.closed && cWindow.status === windowStatus.open) {
         clearInterval(timer);
-
-        throw new Error(errorMsg);
+        reject(errorMsg);
       }
     }
 
@@ -187,17 +177,27 @@ export class IntmaxWalletSigner {
     return `${config.intmaxWalletUrl}/signer?params=` + encodeURIComponent(JSON.stringify(params));
   }
 
-  private eventPromiseListener<T>(): Promise<T> {
+  private eventPromiseListener<T>(
+    params: IntmaxWalletInteractParams,
+    errorMsg: string
+  ): Promise<T> {
     return new Promise((resolve, reject) => {
+      const url = this.generateIntmaxWalletSignUrl(params);
+	
+      const cWindow = this.openIntmaxWallet(url);
+      const timer = this.watchWindow(cWindow, errorMsg, reject);
+	
       const listener = (event: MessageEvent) => {
         if (event.origin === config.intmaxWalletUrl) {
           window.removeEventListener("message", listener);
-
+	    
+	  this.clearWatch(timer, cWindow);
+	  this.closeIntmaxWallet(cWindow);
+	    
           const data = event.data as IntmaxWalletEventResponse;
           if (!data.result) {
             return reject(data.message as string);
           }
-
           resolve(event.data.message as T);
         }
       };
