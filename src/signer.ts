@@ -8,6 +8,7 @@ import {
   Signature,
   ChildWindow,
   windowStatus,
+  ConnectToAccountRequest,
 } from "./interface";
 
 const INTMAX_WALLET_WINDOW_NAME = "intmaxWallet";
@@ -24,12 +25,15 @@ type Reject = (msg: string) => void;
 export class IntmaxWalletSigner {
   private _account: IntmaxWalletAccount | null;
 
-  async connectToAccount(): Promise<IntmaxWalletAccount> {
+  async connectToAccount(request?: ConnectToAccountRequest): Promise<IntmaxWalletAccount> {
     if (this._account) {
       return this._account;
     }
     const params = {
       type: signerType.connect,
+      data: {
+        extraKeys: request?.extraKeys ?? [],
+      },
     };
 
     this._account = await this.interactIntmaxWallet<IntmaxWalletAccount>(
@@ -54,6 +58,12 @@ export class IntmaxWalletSigner {
     const account = await this.connectToAccount();
 
     return account.chainId;
+  }
+
+  async getPublicKey(): Promise<string | null> {
+    const account = await this.connectToAccount();
+
+    return account.publicKey ?? null;
   }
 
   async signTransaction(transaction: TransactionRequest): Promise<string> {
