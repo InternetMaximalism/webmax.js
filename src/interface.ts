@@ -10,9 +10,18 @@ export const signerType = {
 
 export type SignerType = typeof signerType[keyof typeof signerType];
 
+export type AccountExtraKey = "publicKey";
+
+export type AccountExtraKeys = AccountExtraKey[];
+
+export type ConnectToAccountRequest = {
+  extraKeys: AccountExtraKeys;
+};
+
 export type IntmaxWalletAccount = {
   address: string;
   chainId: number;
+  publicKey?: string;
 };
 
 export type Signature = string;
@@ -27,7 +36,11 @@ export type IntmaxWalletMessageParams = {
 
 export type IntmaxWalletInteractParams = {
   type: SignerType;
-  data?: TransactionRequest | IntmaxWalletMessageParams | SwitchChainParams;
+  data?:
+    | TransactionRequest
+    | IntmaxWalletMessageParams
+    | SwitchChainParams
+    | ConnectToAccountRequest;
 };
 
 export type IntmaxWalletEventResponse = {
