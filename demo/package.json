@@ -22,7 +22,7 @@
     "react-scripts": "5.0.1",
     "typescript": "^4.8.3",
     "web-vitals": "^2.1.4",
-    "webmax": "^0.1.7"
+    "webmax": "^0.1.8"
   },
   "scripts": {
     "start": "react-scripts start",
