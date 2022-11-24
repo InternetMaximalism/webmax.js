@@ -91,6 +91,6 @@ const signature = await signer.signMessage("hello world");
 
 ## Demo
 
-See the demo on the website:
+Visit our website:
 
 https://webmaxdemo.netlify.app/
