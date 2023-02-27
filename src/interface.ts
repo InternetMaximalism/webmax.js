@@ -37,6 +37,7 @@ export type IntmaxWalletMessageParams = {
 
 export type IntmaxWalletInteractParams = {
   type: SignerType;
+  txWait?: boolean;
   data?:
     | TransactionRequest
     | IntmaxWalletMessageParams
