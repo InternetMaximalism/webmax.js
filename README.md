@@ -88,7 +88,7 @@ const tx = {
 };
 
 const signer = new IntmaxWalletSigner();
-const receipt = await signer.sendTransaction(tx, false);
+const receipt = await signer.sendTransaction(tx);
 ```
 
 #### Sign message with intmaxWallet signer
