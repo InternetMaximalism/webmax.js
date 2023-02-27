@@ -1,14 +1,14 @@
 import {
-  signerType,
-  IntmaxWalletInteractParams,
-  IntmaxWalletEventResponse,
+  ChildWindow,
+  ConnectToAccountRequest,
   IntmaxWalletAccount,
+  IntmaxWalletEventResponse,
+  IntmaxWalletInteractParams,
+  Signature,
+  signerType,
   TransactionReceipt,
   TransactionRequest,
-  Signature,
-  ChildWindow,
   windowStatus,
-  ConnectToAccountRequest,
 } from "./interface";
 
 const INTMAX_WALLET_WINDOW_NAME = "intmaxWallet";
@@ -23,10 +23,14 @@ const config = {
 type Reject = (msg: string) => void;
 
 export class IntmaxWalletSigner {
-  private _account: IntmaxWalletAccount | null;
+  private _account?: IntmaxWalletAccount | null;
+
+  constructor(account?: null | IntmaxWalletAccount) {
+    this._account = account;
+  }
 
   async connectToAccount(request?: ConnectToAccountRequest): Promise<IntmaxWalletAccount> {
-    if (this._account) {
+    if (this._account && !request?.override) {
       return this._account;
     }
     const params = {

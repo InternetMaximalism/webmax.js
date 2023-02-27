@@ -16,6 +16,7 @@ export type AccountExtraKeys = AccountExtraKey[];
 
 export type ConnectToAccountRequest = {
   extraKeys: AccountExtraKeys;
+  override?: boolean;
 };
 
 export type IntmaxWalletAccount = {
