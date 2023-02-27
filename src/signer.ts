@@ -30,7 +30,7 @@ export class IntmaxWalletSigner {
   }
 
   async connectToAccount(request?: ConnectToAccountRequest): Promise<IntmaxWalletAccount> {
-    if (this._account && !request?.override) {
+    if (this._account && !request?.overwrite) {
       return this._account;
     }
     const params = {
