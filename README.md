@@ -76,6 +76,8 @@ const serializedSignature = await signer.signTransaction(tx);
 
 Signer can sign and send transactions. You will receive a receipt.
 
+> If passing `txwait` as the second argument allows the intmaxwallet to control whether to wait for the transaction to be mined.
+
 ```ts
 import { IntmaxWalletSigner } from "webmax";
 

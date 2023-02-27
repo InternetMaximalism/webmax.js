@@ -84,10 +84,14 @@ export class IntmaxWalletSigner {
     return serializedSignature;
   }
 
-  async sendTransaction(transaction: TransactionRequest): Promise<TransactionReceipt> {
+  async sendTransaction(
+    transaction: TransactionRequest,
+    txWait = true
+  ): Promise<TransactionReceipt> {
     const params = {
       type: signerType.sendTransaction,
       data: transaction,
+      txWait,
     };
 
     const receipt = await this.interactIntmaxWallet<TransactionReceipt>(
