@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { SmallCloseIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
   Flex,
-  VStack,
-  Text,
-  Box,
-  InputGroup,
   Input,
+  InputGroup,
   InputRightElement,
+  Text,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
-import { SmallCloseIcon } from "@chakra-ui/icons";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { IntmaxWalletSigner } from "webmax";
 
 type Inputs = {

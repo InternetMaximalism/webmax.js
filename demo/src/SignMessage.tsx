@@ -1,6 +1,6 @@
+import { Box, Button, Flex, Text, useToast, VStack } from "@chakra-ui/react";
 import { useState } from "react";
-import { Button, Flex, VStack, Text, Box, useToast } from "@chakra-ui/react";
-import { IntmaxWalletSigner } from "webmax";
+import { IntmaxWalletSigner, NoRedirect } from "webmax";
 
 export const SignMessage = () => {
   const [result, setResult] = useState("");
@@ -9,10 +9,9 @@ export const SignMessage = () => {
   const handleSignMessage = async () => {
     try {
       const signer = new IntmaxWalletSigner();
-      const signature = await signer.signMessage("hello world");
+      const signature = await signer.signMessage<NoRedirect>("hello world");
 
       setResult(signature);
-
       toast({
         title: "Success Sign Message",
         position: "top",

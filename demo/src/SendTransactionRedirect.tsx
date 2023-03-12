@@ -10,9 +10,10 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { IntmaxWalletSigner, NoRedirect } from "webmax";
+import { useSearchParams } from "react-router-dom";
+import { IntmaxWalletSigner, Redirect } from "webmax";
 
 type Inputs = {
   to: string;
@@ -20,7 +21,7 @@ type Inputs = {
   gasLimit: number;
 };
 
-export const SignTransaction = () => {
+export const SendTransactionRedirect = () => {
   const [result, setResult] = useState("");
   const toast = useToast();
   const {
@@ -29,6 +30,13 @@ export const SignTransaction = () => {
     resetField,
     formState: { errors },
   } = useForm<Inputs>();
+  const [searchParams] = useSearchParams();
+  const data = searchParams.get("data");
+  useEffect(() => {
+    if (data) {
+      setResult(data);
+    }
+  }, [data]);
 
   const onSubmit: SubmitHandler<Inputs> = async ({
     to,
@@ -43,16 +51,7 @@ export const SignTransaction = () => {
       };
 
       const signer = new IntmaxWalletSigner();
-      const signature = await signer.signTransaction<NoRedirect>(tx);
-
-      setResult(signature);
-
-      toast({
-        title: "Success Sign Transaction",
-        position: "top",
-        status: "success",
-        isClosable: true,
-      });
+      await signer.sendTransaction<Redirect>(tx, true, `${window.location.origin}/redirect`);
     } catch (error) {
       console.error(error);
 
@@ -148,7 +147,7 @@ export const SignTransaction = () => {
             )}
           </Flex>
         </VStack>
-        <Button type="submit">Sign Transaction</Button>
+        <Button type="submit">Send Transaction</Button>
         <Box wordBreak="break-word">
           <Text>result: {result}</Text>
         </Box>
