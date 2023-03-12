@@ -1,6 +1,8 @@
 import {
   ChildWindow,
   ConnectToAccountRequest,
+  ExtractSignResponse,
+  ExtractTxResponse,
   IntmaxWalletAccount,
   IntmaxWalletEventResponse,
   IntmaxWalletInteractParams,
@@ -16,7 +18,7 @@ const CHILD_WINDOW_WATCH_INTERVAL = 100;
 const INTMAX_WALLET_WINDOW_HEIGHT = 600;
 const INTMAX_WALLET_WINDOW_WIDTH = 400;
 
-const config = {
+export const webmaxConfig = {
   intmaxWalletUrl: "https://www.intmaxwallet.io",
 };
 
@@ -70,52 +72,73 @@ export class IntmaxWalletSigner {
     return account.publicKey ?? null;
   }
 
-  async signTransaction(transaction: TransactionRequest): Promise<string> {
+  async signTransaction<T extends string | undefined>(
+    transaction: TransactionRequest,
+    redirectUrl?: T
+  ): Promise<ExtractSignResponse<T>> {
     const params = {
       type: signerType.signTransaction,
       data: transaction,
+      redirectUrl,
     };
+    if (params.redirectUrl) {
+      this.redirectToIntmaxWallet(params);
+      return <ExtractSignResponse<T>>undefined;
+    }
 
     const serializedSignature = await this.interactIntmaxWallet<string>(
       params,
       "IntmaxWallet Tx Signature: User denied transaction signature."
     );
 
-    return serializedSignature;
+    return <ExtractSignResponse<T>>serializedSignature;
   }
 
-  async sendTransaction(
+  async sendTransaction<T extends string | undefined>(
     transaction: TransactionRequest,
-    txWait = true
-  ): Promise<TransactionReceipt> {
+    txWait = true,
+    redirectUrl?: T
+  ): Promise<ExtractTxResponse<T>> {
     const params = {
       type: signerType.sendTransaction,
       data: transaction,
       txWait,
+      redirectUrl,
     };
+    if (params.redirectUrl) {
+      this.redirectToIntmaxWallet(params);
+      return <ExtractTxResponse<T>>undefined;
+    }
 
     const receipt = await this.interactIntmaxWallet<TransactionReceipt>(
       params,
       "IntmaxWallet Tx Send: User denied send transaction."
     );
 
-    return receipt;
+    return <ExtractTxResponse<T>>receipt;
   }
 
-  async signMessage(message: string): Promise<string> {
+  async signMessage<T extends string | undefined>(
+    message: string,
+    redirectUrl?: T
+  ): Promise<ExtractSignResponse<T>> {
     const params = {
       type: signerType.signMessage,
       data: {
         message,
       },
+      redirectUrl,
     };
+    if (params.redirectUrl) {
+      this.redirectToIntmaxWallet(params);
+      return <ExtractSignResponse<T>>undefined;
+    }
 
     const signature = await this.interactIntmaxWallet<Signature>(
       params,
       "IntmaxWallet Message Signature: User denied message signature."
     );
-
-    return signature;
+    return <ExtractSignResponse<T>>signature;
   }
 
   async switchChain(chainId: number): Promise<IntmaxWalletAccount> {
@@ -133,8 +156,11 @@ export class IntmaxWalletSigner {
       params,
       "IntmaxWallet SwitchChain: User Rejected."
     );
-
     return this._account;
+  }
+
+  private redirectToIntmaxWallet(params: IntmaxWalletInteractParams): void {
+    window.location.href = this.generateIntmaxWalletSignUrl(params);
   }
 
   private async interactIntmaxWallet<T>(
@@ -194,7 +220,9 @@ export class IntmaxWalletSigner {
   }
 
   private generateIntmaxWalletSignUrl(params: IntmaxWalletInteractParams): string {
-    return `${config.intmaxWalletUrl}/signer?params=` + encodeURIComponent(JSON.stringify(params));
+    return (
+      `${webmaxConfig.intmaxWalletUrl}/signer?params=` + encodeURIComponent(JSON.stringify(params))
+    );
   }
 
   private eventPromiseListener<T>(
@@ -208,7 +236,7 @@ export class IntmaxWalletSigner {
       const timer = this.watchWindow(cWindow, errorMsg, reject);
 
       const listener = (event: MessageEvent) => {
-        if (event.origin === config.intmaxWalletUrl) {
+        if (event.origin === webmaxConfig.intmaxWalletUrl) {
           window.removeEventListener("message", listener);
 
           this.clearWatch(timer, cWindow);

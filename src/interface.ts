@@ -37,12 +37,13 @@ export type IntmaxWalletMessageParams = {
 
 export type IntmaxWalletInteractParams = {
   type: SignerType;
-  txWait?: boolean;
   data?:
     | TransactionRequest
     | IntmaxWalletMessageParams
     | SwitchChainParams
     | ConnectToAccountRequest;
+  txWait?: boolean;
+  redirectUrl?: string;
 };
 
 export type IntmaxWalletEventResponse = {
@@ -107,3 +108,10 @@ export type TransactionRequest = {
   customData?: Record<string, any>;
   ccipReadEnabled?: boolean;
 };
+
+export type ExtractSignResponse<T extends string | undefined> = T extends string ? void : string;
+export type ExtractTxResponse<T extends string | undefined> = T extends string
+  ? void
+  : TransactionReceipt;
+export type NoRedirect = undefined;
+export type Redirect = string;
