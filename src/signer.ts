@@ -19,7 +19,7 @@ const INTMAX_WALLET_WINDOW_HEIGHT = 600;
 const INTMAX_WALLET_WINDOW_WIDTH = 400;
 
 export const webmaxConfig = {
-  intmaxWalletUrl: "https://www.intmaxwallet.io",
+  intmaxWalletUrl: "https://intmaxwallet.io",
 };
 
 type Reject = (msg: string) => void;
