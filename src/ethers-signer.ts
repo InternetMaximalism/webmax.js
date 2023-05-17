@@ -73,7 +73,6 @@ export class EthersIntmaxWalletSigner extends ethers.Signer implements TypedData
       this.mapTransaction(transaction),
       false
     )) as unknown as Transaction;
-    console.log(result);
     if (!result || !result.hash) throw new Error("Send transaction failed.");
     const tx = await this.provider?.getTransaction(result.hash);
     return tx as ethers.providers.TransactionResponse;
