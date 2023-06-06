@@ -8,9 +8,9 @@ import {
   IntmaxWalletInteractParams,
   Signature,
   signerType,
-  TransactionReceipt,
   TransactionRequest,
   windowStatus,
+  SendTransactionResponse
 } from "./interface";
 
 const INTMAX_WALLET_WINDOW_NAME = "intmaxWallet";
@@ -86,7 +86,7 @@ export class IntmaxWalletSigner {
       return <ExtractSignResponse<T>>undefined;
     }
 
-    const serializedSignature = await this.interactIntmaxWallet<string>(
+    const serializedSignature = await this.interactIntmaxWallet<string | string[]>(
       params,
       "IntmaxWallet Tx Signature: User denied transaction signature."
     );
@@ -110,7 +110,7 @@ export class IntmaxWalletSigner {
       return <ExtractTxResponse<T>>undefined;
     }
 
-    const receipt = await this.interactIntmaxWallet<TransactionReceipt>(
+    const receipt = await this.interactIntmaxWallet<SendTransactionResponse>(
       params,
       "IntmaxWallet Tx Send: User denied send transaction."
     );
@@ -246,6 +246,10 @@ export class IntmaxWalletSigner {
           if (!data.result) {
             return reject(data.message as string);
           }
+          // signature、EVMの場合はstringだが、StarkNetの場合はstring[]
+          // いずれchain idなどのメタ情報も併せてウォレットから戻してきた方がいいかも。
+          // チェーンによってインターフェースが違うので、戻り値の型を見て判断するというのは
+          // ちょっとスマートじゃない
           resolve(event.data.message as T);
         }
       };

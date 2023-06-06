@@ -1,4 +1,10 @@
 import { BigNumber } from "bignumber.js";
+import {
+    GetTransactionReceiptResponse,
+    GetTransactionResponse,
+} from "starknet";
+import * as zksync from "zksync-web3";
+import { TransactionResponse } from "@ethersproject/abstract-provider";
 
 export const signerType = {
   connect: "connect",
@@ -25,7 +31,7 @@ export type IntmaxWalletAccount = {
   publicKey?: string;
 };
 
-export type Signature = string;
+export type Signature = string | string[];
 
 export type SwitchChainParams = {
   chainId: number;
@@ -105,13 +111,15 @@ export type TransactionRequest = {
   accessList?: AccessListish;
   maxPriorityFeePerGas?: BigNumberish;
   maxFeePerGas?: BigNumberish;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   customData?: Record<string, any>;
   ccipReadEnabled?: boolean;
 };
 
-export type ExtractSignResponse<T extends string | undefined> = T extends string ? void : string;
+export type ExtractSignResponse<T extends string | string[] | undefined> = T extends string ? void : string | string[];
 export type ExtractTxResponse<T extends string | undefined> = T extends string
   ? void
-  : TransactionReceipt;
+  : SendTransactionResponse;;
 export type NoRedirect = undefined;
 export type Redirect = string;
+export type SendTransactionResponse = GetTransactionReceiptResponse | GetTransactionResponse | zksync.types.TransactionResponse | TransactionResponse

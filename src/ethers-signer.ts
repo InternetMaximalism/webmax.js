@@ -56,12 +56,16 @@ export class EthersIntmaxWalletSigner extends ethers.Signer implements TypedData
   async signMessage(message: ethers.utils.Bytes | string): Promise<string> {
     if (typeof message !== "string") throw new Error("Byte-like signatures are not supported.");
     const result = await this._intmaxWalletSigner.signMessage(message);
+    // EthersIntmaxWalletSignerなのでEVM専用。
+    if (typeof result !== "string") throw new Error("evm only");
     if (!result) throw new Error("Sign message failed.");
     else return result;
   }
 
   async signTransaction(transaction: ethers.providers.TransactionRequest): Promise<string> {
     const result = await this._intmaxWalletSigner.signTransaction(this.mapTransaction(transaction));
+    // EthersIntmaxWalletSignerなのでEVM専用。
+    if (typeof result !== "string") throw new Error("evm only");
     if (!result) throw new Error("Sign transaction failed.");
     else return result;
   }
@@ -78,6 +82,7 @@ export class EthersIntmaxWalletSigner extends ethers.Signer implements TypedData
     return tx as ethers.providers.TransactionResponse;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async _signTypedData(_domain: unknown, _types: unknown, _value: unknown): Promise<string> {
     return logger.throwError(
       "Typed data signatures are not supported.",
