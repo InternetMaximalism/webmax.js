@@ -56,7 +56,7 @@ export class EthersIntmaxWalletSigner extends ethers.Signer implements TypedData
   async signMessage(message: ethers.utils.Bytes | string): Promise<string> {
     if (typeof message !== "string") throw new Error("Byte-like signatures are not supported.");
     const result = await this._intmaxWalletSigner.signMessage(message);
-    // EthersIntmaxWalletSignerなのでEVM専用。
+    // Since the class name is EthersIntmaxWalletSigner, it should be used exclusively for EVM.
     if (typeof result !== "string") throw new Error("evm only");
     if (!result) throw new Error("Sign message failed.");
     else return result;
@@ -64,7 +64,7 @@ export class EthersIntmaxWalletSigner extends ethers.Signer implements TypedData
 
   async signTransaction(transaction: ethers.providers.TransactionRequest): Promise<string> {
     const result = await this._intmaxWalletSigner.signTransaction(this.mapTransaction(transaction));
-    // EthersIntmaxWalletSignerなのでEVM専用。
+    // Since the class name is EthersIntmaxWalletSigner, it should be used exclusively for EVM.
     if (typeof result !== "string") throw new Error("evm only");
     if (!result) throw new Error("Sign transaction failed.");
     else return result;
