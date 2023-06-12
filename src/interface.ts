@@ -119,7 +119,7 @@ export type TransactionRequest = {
 export type ExtractSignResponse<T extends string | string[] | undefined> = T extends string ? void : string | string[];
 export type ExtractTxResponse<T extends string | undefined> = T extends string
   ? void
-  : SendTransactionResponse;;
+  : SendTransactionResponse;
 export type NoRedirect = undefined;
 export type Redirect = string;
 export type SendTransactionResponse = GetTransactionReceiptResponse | GetTransactionResponse | zksync.types.TransactionResponse | TransactionResponse
