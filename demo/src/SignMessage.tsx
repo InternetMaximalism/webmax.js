@@ -11,7 +11,9 @@ export const SignMessage = () => {
       const signer = new IntmaxWalletSigner();
       const signature = await signer.signMessage<NoRedirect>("hello world");
 
-      setResult(signature);
+      const isEVMSign = !Array.isArray(signature);
+      const tmp = isEVMSign ? signature as string: (signature as string[]).join(",");
+      setResult(tmp);
       toast({
         title: "Success Sign Message",
         position: "top",
